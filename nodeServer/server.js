@@ -14,7 +14,7 @@ app.get('/magnet', (request, response) =>{
 	response.send('Fridge magnet not ready yet =(')
 });
 
-app.get('*', (request, response) => {
+app.get('/total', (request, response) => {
 	const connection = mysql.createConnection({
 		host : 'localhost',
 		user : 'main',
@@ -26,8 +26,12 @@ app.get('*', (request, response) => {
 	connection.query("create temporary table temp as (select userInfo.name, showerData.litres from userInfo inner join showerData on userInfo.id=showerData.id); select name, sum(litres) as totalLitres from temp group by name;", function(err, result){
 		if (err) throw err;
 		console.log(result[1]);
-		response.render('index.ejs', {data: result[1]});
+		response.render('total.ejs', {data: result[1]});
 	});
+});
+
+app.get('*', (request, response) => {
+	response.render('index.ejs');
 });
 
 app.listen(port, (err) => {	
