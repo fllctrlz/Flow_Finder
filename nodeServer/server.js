@@ -8,25 +8,40 @@ const htmlPath = path.join(__dirname, 'index.html');
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
-//app.use(express.static(htmlPath)) test
+app.get('/danger/danger/delete', (request, response) => {
+	connectToDatabase((connection) => {
+		connection.connect();
+		connection.query("truncate table showerData", (err, result) => {
+			if (err) throw err;
+			response.render('delete.ejs');			
+		});
+	});
+	
+});
 
 app.get('/magnet', (request, response) =>{
 	response.send('Fridge magnet not ready yet =(')
 });
 
-app.get('/total', (request, response) => {
-	const connection = mysql.createConnection({
-		host : 'localhost',
-		user : 'main',
-		password : 'ctrlzfll',
-		database : 'flowFinder',
-		multipleStatements: true
+app.get('/average', (request, response) => {
+	connectToDatabase((connection) => {
+		connection.connect();
+		connection.query("create temporary table temp as (select userInfo.name, showerData.litres from userInfo inner join showerData on userInfo.id=showerData.id); select name, avg(litres) as avgLitres from temp group by name;", (err, result) => {
+			if (err) throw err;
+			console.log(result[1]);
+			response.render('average.ejs', {data: result[1]});
+		});
 	});
-	connection.connect();
-	connection.query("create temporary table temp as (select userInfo.name, showerData.litres from userInfo inner join showerData on userInfo.id=showerData.id); select name, sum(litres) as totalLitres from temp group by name;", function(err, result){
-		if (err) throw err;
-		console.log(result[1]);
-		response.render('total.ejs', {data: result[1]});
+});
+
+app.get('/total', (request, response) => {
+	connectToDatabase((connection) => {
+		connection.connect();
+		connection.query("create temporary table temp as (select userInfo.name, showerData.litres from userInfo inner join showerData on userInfo.id=showerData.id); select name, sum(litres) as totalLitres from temp group by name;", (err, result) => {
+			if (err) throw err;
+			console.log(result[1]);
+			response.render('total.ejs', {data: result[1]});
+		});
 	});
 });
 
@@ -40,6 +55,17 @@ app.listen(port, (err) => {
 	}
 	console.log('server is listening on '+port);
 });
+
+function connectToDatabase(callback) {
+	const connection = mysql.createConnection({
+		host : 'localhost',
+		user : 'main',
+		password : 'ctrlzfll',
+		database : 'flowFinder',
+		multipleStatements: true
+	});
+	callback(connection);
+}
 
 
 
