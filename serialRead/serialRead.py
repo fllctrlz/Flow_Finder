@@ -18,7 +18,7 @@ while True:
         totalWaterUsed+=amount
     
     if currId == -1 and prevId > -1:
-        id = prevId+1
+        id = prevId
         litres = totalWaterUsed/1000
         try:
             cursor.execute("""insert into showerData (id, litres) values(%s, %s)""",(id, litres))
