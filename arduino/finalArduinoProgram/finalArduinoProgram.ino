@@ -10,6 +10,15 @@
  * water used in mL in the last 5 seconds. 
  */
 
+ /*
+  * ID's 
+  * 1 - Alex
+  * 2 - Trent
+  * 3 - Chloe
+  * 4 - Matthew
+  * 
+  */
+
 #include <Adafruit_Fingerprint.h>
 #include <SoftwareSerial.h>
 
