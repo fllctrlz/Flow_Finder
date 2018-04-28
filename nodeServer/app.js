@@ -16,11 +16,21 @@ app.get('/danger/danger/delete', (request, response) => {
 			response.render('delete.ejs');			
 		});
 	});
-	
 });
 
-app.get('/magnet', (request, response) =>{
-	response.send('Fridge magnet not ready yet =(')
+app.get('/magnet/total', (request, response) =>{
+	connectToDatabase((connection) => {
+		connection.connect();
+		connection.query("create temporary table temp as (select userInfo.name, showerData.litres from userInfo inner join showerData on userInfo.id=showerData.id); select name, sum(litres) as totalLitres from temp group by name;", (err, result) => {
+			if (err) throw err;
+			console.log(result[1]);
+		        response.end(JSON.stringify(result[1]));
+		});
+	});
+});
+
+app.get('/magnet/average', (request, response) =>{
+	response.end("hello there");
 });
 
 app.get('/average', (request, response) => {
@@ -40,6 +50,7 @@ app.get('/total', (request, response) => {
 		connection.query("create temporary table temp as (select userInfo.name, showerData.litres from userInfo inner join showerData on userInfo.id=showerData.id); select name, sum(litres) as totalLitres from temp group by name;", (err, result) => {
 			if (err) throw err;
 			console.log(result[1]);
+
 			response.render('total.ejs', {data: result[1]});
 		});
 	});
