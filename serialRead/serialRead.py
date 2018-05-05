@@ -13,13 +13,18 @@ while True:
     line = ser.readline().decode("utf-8").split()
     currId = int(line[0])
     amount = int(line[1])
+
     
     if currId > -1 and currId == prevId:
         totalWaterUsed+=amount
     
     if currId == -1 and prevId > -1:
         id = prevId
-        litres = totalWaterUsed/1000*0.264172
+
+	#Trent test
+        #litres = totalWaterUsed/1000*0.264172
+        litres = totalWaterUsed/1000.0
+
         try:
             cursor.execute("""insert into showerData (id, litres) values(%s, %s)""",(id, litres))
             conn.commit()
