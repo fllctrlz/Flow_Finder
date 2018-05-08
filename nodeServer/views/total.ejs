@@ -26,7 +26,7 @@ This webpage will display the total water consumption and an accompanying graph
             <canvas id="myChart"></canvas>
         </div>
 	<script>
-        //this script will format the graph
+        //this script will format the graph that will be on the total webpage
 	    var names = [];
 	    var totLitres = [];
 	    <% for (var i = 0; i < data.length; i++){%>
@@ -45,6 +45,7 @@ This webpage will display the total water consumption and an accompanying graph
                         label: 'Total Water Consumption (Gallons)',
                         data: totLitres,
                         
+                       //background colour for each bar
                         backgroundColor: [
                             'rgba(255, 0, 0, 1)',
                             'rgba(0, 255, 0, 1)',
@@ -53,6 +54,7 @@ This webpage will display the total water consumption and an accompanying graph
                             'rgba(0, 255, 255, 1)',
                             'rgba(255, 0, 255, 1)'
                         ],
+                        //border colour for each bar
                         borderColor: [
                             'rgba(255,99,132,1)',
                             'rgba(54, 162, 235, 1)',
