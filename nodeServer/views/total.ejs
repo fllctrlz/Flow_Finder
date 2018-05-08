@@ -1,5 +1,17 @@
+<!--
+Author: CTRL-Z Robotics
+
+This is one of the webpages that will loaded when the server gets a specific request.
+This is the webpage for when there is the request '/total'
+This webpage will display the total water consumption and an accompanying graph
+-->
+
+
+
+
 <html>
     <head>
+        <!--Linking the CSS and JavaScript file-->
         <link rel="stylesheet" href="website/style.css">
         <title>Flow Finder</title>
         <meta charset="utf-8">
@@ -14,6 +26,7 @@
             <canvas id="myChart"></canvas>
         </div>
 	<script>
+        //this script will format the graph
 	    var names = [];
 	    var totLitres = [];
 	    <% for (var i = 0; i < data.length; i++){%>

@@ -1,3 +1,11 @@
+'''
+Author: CTRL-Z Robotics
+
+This program will take information from the server and display it onto the E-Ink display.
+'''
+
+
+#Importing various libraries 
 import epd2in7
 import Image
 import ImageFont
@@ -7,6 +15,9 @@ import json
 import time
 
 
+
+#this function will set the variables that will be used when we call it later.
+#we call it when we want to display the Wi-Fi Ip Adress, so we can use it to access the server
 def displayText(text):
     epd = epd2in7.EPD()
     epd.init()
@@ -19,6 +30,8 @@ def displayText(text):
 
     epd.display_frame(epd.get_frame_buffer(image.rotate(90, expand=True)))
 
+
+#this method will display each person's water consumption and the bar graph
 def main(data):
     epd = epd2in7.EPD()
     epd.init()
@@ -27,23 +40,30 @@ def main(data):
 
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeSans.ttf', 24)
-
+	#finding total water used among all users
     total = 0
     for d in data:
 	 total += d["totalLitres"]
     total = float(total)
-   
+
+   #finding each persons percentage of total water usage
     i = 0
     for d in data:
-
         k = float(d["totalLitres"])/total
+	#displaying the bars for each person by extending it proportionally to their percentage
 	draw.rectangle((103, 28*i, 103+125*k, 28*i+20), fill=0)	
+	#displaying each persons name
 	draw.text((2, 28*i), d["name"] , font = font, fill = 0)
+	#display each persons water consumption
 	draw.text((175, 28*i),str(round(d["totalLitres"]/3.85,1)) + " Gal", font = font, fill = 0)
+
 	i = i+1
 
     epd.display_frame(epd.get_frame_buffer(image.rotate(90, expand=True)))
     
+
+#main method that calls the other methods
+#it also gets the information from the server
 def oneUpdate():
 	with open("/home/pi/Desktop/Flow_Finder/ip.txt", "r") as file:
 		output = file.read()
